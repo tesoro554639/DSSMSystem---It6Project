@@ -36,8 +36,9 @@ class InventoryController extends Controller
         return view('inventory.index', compact('items', 'categories', 'statuses', 'availableCount', 'soldCount', 'totalCount'));
     }
 
-    public function show(Item $item)
+    public function show($id)
     {
+        $item = Item::findOrFail($id);
         $item->load(['category', 'status', 'bale.supplier', 'transactions']);
         return view('inventory.show', compact('item'));
     }
