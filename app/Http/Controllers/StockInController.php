@@ -42,8 +42,10 @@ class StockInController extends Controller
             ->with('success', 'Bale recorded successfully. Now add items to the bale.');
     }
 
-    public function show(Bale $bale)
+    public function show($id)
     {
+        $bale = Bale::findOrFail($id);
+
         $bale->load(['supplier', 'items.category', 'items.status']);
         $categories = Category::all();
         $statuses = Status::all();
