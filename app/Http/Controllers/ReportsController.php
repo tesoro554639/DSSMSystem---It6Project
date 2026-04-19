@@ -13,7 +13,7 @@ class ReportsController extends Controller
 {
     public function dailySales(Request $request)
     {
-        $date = $request->get('date', Carbon::today()->toDateString());
+        $date = $request->input('date', Carbon::today()->toDateString());
 
         $transactions = Transaction::with(['user', 'items'])
             ->whereDate('created_at', $date)
@@ -41,7 +41,7 @@ class ReportsController extends Controller
 
     public function inventoryStatus(Request $request)
     {
-        $categoryId = $request->get('category');
+        $categoryId = $request->input('category');
 
         $inventoryQuery = Item::with(['category', 'status', 'bale.supplier']);
 

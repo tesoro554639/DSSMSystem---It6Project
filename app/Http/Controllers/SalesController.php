@@ -84,8 +84,10 @@ class SalesController extends Controller
             ->with('success', 'Transaction completed successfully.');
     }
 
-    public function show(Transaction $transaction)
+    public function show($id)
     {
+        $transaction = Transaction::findOrFail($id); 
+
         $transaction->load(['user', 'items.category', 'items.status']);
         return view('sales.show', compact('transaction'));
     }
