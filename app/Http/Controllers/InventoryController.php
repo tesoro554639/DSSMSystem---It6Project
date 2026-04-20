@@ -13,16 +13,17 @@ class InventoryController extends Controller
     {
         $query = Item::with(['category', 'status', 'bale.supplier']);
 
-        if ($request->has('category') && $request->category) {
+        if ($request->filled('category')) {
             $query->where('category_id', $request->category);
         }
 
-        if ($request->has('status') && $request->status) {
-            $query->where('status_id', $request->status);
-        }
-
-        if ($request->has('is_sold')) {
-            $query->where('is_sold', $request->boolean('is_sold'));
+        if ($request->filled('status')) {
+            if ($request->status === 'sold') {
+                $query->where('is_sold', true);
+            } else {
+                $query->where('status_id', $request->status)
+                    ->where('is_sold', false);
+            }
         }
 
         $items = $query->orderByDesc('created_at')->paginate(10);
@@ -33,7 +34,10 @@ class InventoryController extends Controller
         $soldCount = Item::where('is_sold', true)->count();
         $totalCount = Item::count();
 
-        return view('inventory.index', compact('items', 'categories', 'statuses', 'availableCount', 'soldCount', 'totalCount'));
+        return view('inventory.index', compact(
+            'items', 'categories', 'statuses', 
+            'availableCount', 'soldCount', 'totalCount'
+        ));
     }
 
     public function show($id)

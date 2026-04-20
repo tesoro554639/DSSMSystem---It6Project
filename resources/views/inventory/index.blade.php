@@ -51,11 +51,16 @@
                     <div class="col-md-3">
                         <select name="status" class="form-select">
                             <option value="">All Statuses</option>
+
                             @foreach($statuses as $status)
                                 <option value="{{ $status->id }}" {{ request('status') == $status->id ? 'selected' : '' }}>
                                     {{ $status->name }}
                                 </option>
                             @endforeach
+
+                            <option value="sold" {{ request('status') == 'sold' ? 'selected' : '' }}>
+                                Sold
+                            </option>
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -82,9 +87,25 @@
                                 <td>{{ $item->item_code }}</td>
                                 <td>{{ $item->category->name }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $item->is_sold ? 'secondary' : 'success' }}">
-                                        {{ $item->is_sold ? 'Sold' : 'Available' }}
-                                    </span>
+                                    @if(!$item->is_sold)
+                                        @if($item->status_id == 1)
+                                            <span class="badge bg-success">
+                                                {{ $item->status->name }}
+                                            </span>
+                                        @elseif($item->status_id == 2)
+                                            <span class="badge bg-info">
+                                                {{ $item->status->name }}
+                                            </span>
+                                        @elseif($item->status_id == 3)
+                                            <span class="badge bg-warning">
+                                                {{ $item->status->name }}
+                                            </span>
+                                        @endif
+                                    @else
+                                        <span class="badge bg-secondary">
+                                            {{ $item->is_sold ? 'Sold' : '' }}
+                                        </span>
+                                    @endif
                                 </td>
                                 <td>₱{{ number_format($item->price, 2) }}</td>
                                 <td>{{ $item->quantity }}</td>
@@ -104,7 +125,7 @@
                 </table>
             </div>
             <div class="card-footer">
-                {{ $items->fragment('inventory-Table')->links() }}
+                {{ $items->withQueryString()->links() }}
             </div>
         </div>
     </div>
