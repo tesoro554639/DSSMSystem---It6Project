@@ -25,7 +25,7 @@ class InventoryController extends Controller
             $query->where('is_sold', $request->boolean('is_sold'));
         }
 
-        $items = $query->orderByDesc('created_at')->paginate(20);
+        $items = $query->orderByDesc('created_at')->paginate(10);
         $categories = Category::all();
         $statuses = Status::all();
 

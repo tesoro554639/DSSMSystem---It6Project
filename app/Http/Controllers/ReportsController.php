@@ -49,7 +49,7 @@ class ReportsController extends Controller
             $inventoryQuery->where('category_id', $categoryId);
         }
 
-        $items = $inventoryQuery->orderByDesc('created_at')->paginate(20);
+        $items = $inventoryQuery->orderByDesc('created_at')->paginate(10);
 
         $categorySummary = DB::table('items')
             ->join('categories', 'items.category_id', '=', 'categories.id')
