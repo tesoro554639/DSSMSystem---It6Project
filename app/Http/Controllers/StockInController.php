@@ -52,8 +52,10 @@ class StockInController extends Controller
         return view('stock-in.show', compact('bale', 'categories', 'statuses'));
     }
 
-    public function addItems(Request $request, Bale $bale)
+    public function addItems(Request $request, $id)
     {
+        $bale = Bale::findOrFail($id);
+        
         $validated = $request->validate([
             'items' => 'required|array|min:1',
             'items.*.category_id' => 'required|exists:categories,id',
@@ -80,6 +82,37 @@ class StockInController extends Controller
 
         return redirect()->route('stock-in.index')
             ->with('success', 'Items added to bale successfully.');
+    }
+
+    public function edit($id)
+    {
+        $bale = Bale::findOrFail($id);
+        $suppliers = Supplier::all();
+
+        return view('stock-in.edit', compact('bale', 'suppliers'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $bale = Bale::findOrFail($id);
+
+        $validated = $request->validate([
+            'bale_number' => [
+                'required', 
+                'string', 
+                Rule::unique('bales', 'bale_number')->ignore($id)
+            ],
+            'supplier_id' => 'required|exists:suppliers,id',
+            'purchase_price' => 'required|numeric|min:0',
+            'total_items' => 'required|integer|min:1',
+            'purchase_date' => 'required|date',
+            'notes' => 'nullable|string',
+        ]);
+
+        $bale->update($validated);
+
+        return redirect()->route('stock-in.index')
+            ->with('success', 'Bale updated successfully.');
     }
 
     public function destroy($id)

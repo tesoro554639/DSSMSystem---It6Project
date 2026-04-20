@@ -42,15 +42,24 @@
                                 <td>{{ $bale->items_count ?? $bale->items->count() }}</td>
                                 <td>₱{{ number_format($bale->purchase_price, 2) }}</td>
                                 <td>
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('stock-in.show', $bale->id) }}" class="btn btn-outline-primary">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="{{ route('stock-in.show', $bale->id) }}" class="btn btn-outline-primary"
+                                            title="View">
                                             <i class="bi bi-eye"></i>
                                         </a>
+
+                                        <a href="{{ route('stock-in.edit', $bale->id) }}" class="btn btn-outline-success"
+                                            title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
                                         <form action="{{ route('stock-in.destroy', $bale->id) }}" method="POST"
-                                            onsubmit="return confirm('Are you sure?')">
+                                            onsubmit="return confirm('Are you sure you want to delete this bale?')"
+                                            style="display: inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger">
+                                            <button type="submit" class="btn btn-outline-danger" title="Delete"
+                                                style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>

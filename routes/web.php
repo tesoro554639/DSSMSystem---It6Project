@@ -14,7 +14,7 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::resource('stock-in', StockInController::class)->except(['edit', 'update']);
+    Route::resource('stock-in', StockInController::class);
     Route::post('stock-in/{bale}/add-items', [StockInController::class, 'addItems'])->name('stock-in.add-items');
 
     Route::resource('sales', SalesController::class)->except(['edit', 'update']);
