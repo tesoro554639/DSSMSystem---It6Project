@@ -4,23 +4,19 @@
 
 @section('content')
     <div class="container-fluid">
-        {{-- 1. Changed Heading --}}
         <h2 class="mb-4">Edit Bale: {{ $bale->bale_number }}</h2>
 
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        {{-- 2. Updated Route to Update and passed the ID --}}
                         <form method="POST" action="{{ route('stock-in.update', $bale->id) }}">
                             @csrf
-                            {{-- 3. Added PUT Method --}}
                             @method('PUT')
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="bale_number" class="form-label">Bale Number</label>
-                                    {{-- 4. Value now uses $bale->attribute as fallback --}}
                                     <input type="text" name="bale_number" id="bale_number"
                                         class="form-control @error('bale_number') is-invalid @enderror"
                                         value="{{ old('bale_number', $bale->bale_number) }}" required>
@@ -34,7 +30,6 @@
                                         class="form-select @error('supplier_id') is-invalid @enderror" required>
                                         <option value="">Select Supplier</option>
                                         @foreach($suppliers as $supplier)
-                                            {{-- 5. Selected logic now checks old input OR current bale data --}}
                                             <option value="{{ $supplier->id }}" {{ old('supplier_id', $bale->supplier_id) == $supplier->id ? 'selected' : '' }}>
                                                 {{ $supplier->name }}
                                             </option>
