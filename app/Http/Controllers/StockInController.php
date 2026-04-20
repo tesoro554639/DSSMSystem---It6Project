@@ -82,8 +82,9 @@ class StockInController extends Controller
             ->with('success', 'Items added to bale successfully.');
     }
 
-    public function destroy(Bale $bale)
+    public function destroy($id)
     {
+        $bale = Bale::findOrFail($id);
         $bale->delete();
         return redirect()->route('stock-in.index')
             ->with('success', 'Bale deleted successfully.');
