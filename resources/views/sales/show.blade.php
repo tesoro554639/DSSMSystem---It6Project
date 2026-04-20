@@ -15,13 +15,13 @@
             </a>
         </div>
 
-        <div class="row">
+        <div class="row mb-4">
             <div class="col-md-6">
-                <div class="card mb-4">
+                <div class="card mb-4 h-100 d-flex flex-column">
                     <div class="card-header">
                         <h5 class="mb-0">Transaction Details</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body flex-grow-1">
                         <table class="table table-borderless mb-0">
                             <tr>
                                 <td class="text-muted">Transaction Number</td>
@@ -57,11 +57,11 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card mb-4">
+                <div class="card mb-4 h-100 d-flex flex-column">
                     <div class="card-header">
                         <h5 class="mb-0">Payment Summary</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body flex-grow-1">
                         <table class="table table-borderless mb-0">
                             <tr>
                                 <td class="text-muted">Subtotal</td>

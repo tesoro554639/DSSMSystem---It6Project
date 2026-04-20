@@ -13,11 +13,11 @@
 
         <div class="row">
             <div class="col-md-6">
-                <div class="card">
+                <div class="card h-100 d-flex flex-column">
                     <div class="card-header">
                         <h5 class="mb-0">Item Information</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body flex-grow-1">
                         <table class="table table-borderless mb-0">
                             <tr>
                                 <td class="text-muted">Item Code</td>
@@ -54,11 +54,11 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card">
+                <div class="card h-100 d-flex flex-column">
                     <div class="card-header">
                         <h5 class="mb-0">Bale Information</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body flex-grow-1">
                         <table class="table table-borderless mb-0">
                             <tr>
                                 <td class="text-muted">Bale Number</td>

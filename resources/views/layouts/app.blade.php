@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,9 +12,11 @@
         :root {
             --sidebar-width: 250px;
         }
+
         body {
             min-height: 100vh;
         }
+
         .sidebar {
             width: var(--sidebar-width);
             min-height: 100vh;
@@ -22,14 +25,17 @@
             top: 0;
             z-index: 100;
         }
+
         .main-content {
             margin-left: var(--sidebar-width);
             min-height: 100vh;
         }
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
             }
+
             .main-content {
                 margin-left: 0;
             }
@@ -37,46 +43,60 @@
     </style>
     @stack('styles')
 </head>
+
 <body>
     @auth
-        <nav class="sidebar bg-dark text-white p-3">
+        <nav class="sidebar bg-dark text-white p-3 d-flex flex-column">
             <div class="text-center py-3 border-bottom border-secondary mb-3">
                 <h4 class="mb-0 fw-bold">DSSM</h4>
                 <small class="text-muted">Daily Sales & Stock-In</small>
             </div>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link text-white {{ request()->routeIs('dashboard') ? 'bg-primary rounded' : '' }}" href="{{ route('dashboard') }}">
+                    <a class="nav-link text-white {{ request()->routeIs('dashboard') ? 'bg-primary rounded' : '' }}"
+                        href="{{ route('dashboard') }}">
                         <i class="bi bi-speedometer2 me-2"></i> Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white {{ request()->routeIs('stock-in.*') ? 'bg-primary rounded' : '' }}" href="{{ route('stock-in.index') }}">
+                    <a class="nav-link text-white {{ request()->routeIs('stock-in.*') ? 'bg-primary rounded' : '' }}"
+                        href="{{ route('stock-in.index') }}">
                         <i class="bi bi-box-seam me-2"></i> Stock-In
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white {{ request()->routeIs('sales.*') ? 'bg-primary rounded' : '' }}" href="{{ route('sales.index') }}">
+                    <a class="nav-link text-white {{ request()->routeIs('sales.*') ? 'bg-primary rounded' : '' }}"
+                        href="{{ route('sales.index') }}">
                         <i class="bi bi-cart me-2"></i> Sales
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white {{ request()->routeIs('inventory.*') ? 'bg-primary rounded' : '' }}" href="{{ route('inventory.index') }}">
+                    <a class="nav-link text-white {{ request()->routeIs('inventory.*') ? 'bg-primary rounded' : '' }}"
+                        href="{{ route('inventory.index') }}">
                         <i class="bi bi-clipboard-data me-2"></i> Inventory
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white {{ request()->routeIs('reports.*') ? 'bg-primary rounded' : '' }}" href="{{ route('reports.daily-sales') }}">
+                    <a class="nav-link text-white {{ request()->routeIs('reports.*') ? 'bg-primary rounded' : '' }}"
+                        href="{{ route('reports.daily-sales') }}">
                         <i class="bi bi-graph-up me-2"></i> Reports
                     </a>
                 </li>
             </ul>
+
             <div class="mt-auto pt-3 border-top border-secondary">
-                <div class="d-flex align-items-center text-white mb-3">
-                    <i class="bi bi-person-circle fs-4 me-2"></i>
-                    <div>
-                        <small class="d-block">{{ auth()->user()->name }}</small>
-                        <small class="text-muted">{{ auth()->user()->position ?? 'Employee' }}</small>
+                <div class="d-flex align-items-center text-white mb-3 p-2">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-person-circle fs-3 me-2"></i>
+                    </div>
+
+                    <div class="lh-sm">
+                        <span class="d-block fw-bold" style="font-size: 0.9rem;">
+                            {{ auth()->user()->name }}
+                        </span>
+                        <small class="text-white-50">
+                            {{ auth()->user()->position ?? 'Employee' }}
+                        </small>
                     </div>
                 </div>
                 <form method="POST" action="{{ route('logout') }}">
@@ -106,4 +126,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
 </body>
+
 </html>

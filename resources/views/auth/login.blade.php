@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,13 +13,14 @@
         }
     </style>
 </head>
+
 <body class="min-vh-100">
     <div class="container-fluid min-vh-100">
         <div class="row min-vh-100">
             <div class="col-md-7 login-gradient text-white p-5 d-flex flex-column justify-content-between">
                 <div>
                     <h1 class="display-3 fw-bold">DSSM</h1>
-                    <p class="lead">Daily Sales and Stock-In Management System</p>
+                    <p class="lead">Ukay-ukay Daily Sales and Stock-In Management System</p>
                     <p class="text-white-50">Streamline your thrift shop operations with automated tracking.</p>
                 </div>
                 <div class="mt-5">
@@ -51,7 +53,7 @@
                     </div>
                 </div>
                 <div class="text-white-50 small">
-                    &copy; 2026 DSSM. All rights reserved.
+                    <hr> By Tesoro, Luis James and Ambos, Joshua.
                 </div>
             </div>
 
@@ -66,7 +68,8 @@
 
                             <div class="mb-3">
                                 <label for="employee_id" class="form-label">Employee ID</label>
-                                <select id="employee_id" name="employee_id" class="form-select @error('employee_id') is-invalid @enderror" required>
+                                <select id="employee_id" name="employee_id"
+                                    class="form-select @error('employee_id') is-invalid @enderror" required>
                                     <option value="">Select your employee ID</option>
                                     @foreach(\App\Models\User::where('is_active', true)->get() as $user)
                                         <option value="{{ $user->employee_id }}" {{ old('employee_id') == $user->employee_id ? 'selected' : '' }}>
@@ -81,7 +84,9 @@
 
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Enter your password" required>
+                                <input type="password" id="password" name="password"
+                                    class="form-control @error('password') is-invalid @enderror"
+                                    placeholder="Enter your password" required>
                                 @error('password')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -103,4 +108,5 @@
         </div>
     </div>
 </body>
+
 </html>
