@@ -59,11 +59,18 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link text-white {{ request()->routeIs('suppliers.*') ? 'bg-primary rounded' : '' }}"
+                        href="{{ route('suppliers.index') }}">
+                        <i class="bi bi-truck me-2"></i> Suppliers
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link text-white {{ request()->routeIs('stock-in.*') ? 'bg-primary rounded' : '' }}"
                         href="{{ route('stock-in.index') }}">
                         <i class="bi bi-box-seam me-2"></i> Stock-In
                     </a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link text-white {{ request()->routeIs('sales.*') ? 'bg-primary rounded' : '' }}"
                         href="{{ route('sales.index') }}">

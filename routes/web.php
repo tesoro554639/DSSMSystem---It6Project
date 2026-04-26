@@ -5,6 +5,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\StockInController;
+use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,8 +15,11 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::resource('stock-in', StockInController::class);
     Route::post('stock-in/{bale}/add-items', [StockInController::class, 'addItems'])->name('stock-in.add-items');
+    Route::resource('stock-in', StockInController::class);
+
+    Route::post('suppliers/{supplier}/add-bales', [SupplierController::class, 'addBales'])->name('suppliers.add-bales');
+    Route::resource('suppliers', SupplierController::class);
 
     Route::resource('sales', SalesController::class)->except(['edit', 'update']);
     Route::get('sales/receipt/{transaction}', [ReportsController::class, 'transactionReceipt'])->name('sales.receipt');
