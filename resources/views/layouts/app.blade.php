@@ -44,7 +44,7 @@
     @stack('styles')
 </head>
 
-<body>
+<body class="bg-light">
     @auth
         <nav class="sidebar bg-dark text-white p-3 d-flex flex-column">
             <div class="text-center py-3 border-bottom border-secondary mb-3">

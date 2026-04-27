@@ -6,6 +6,8 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\StockInController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\ItemsController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,6 +22,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('suppliers/{supplier}/add-bales', [SupplierController::class, 'addBales'])->name('suppliers.add-bales');
     Route::resource('suppliers', SupplierController::class);
+
+    Route::post('items/{supplier}/add-items', [ItemsController::class, 'addItems'])->name('suppliers.add-items');
+    Route::resource('items', ItemsController::class);
 
     Route::resource('sales', SalesController::class)->except(['edit', 'update']);
     Route::get('sales/receipt/{transaction}', [ReportsController::class, 'transactionReceipt'])->name('sales.receipt');
