@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Employee;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,20 +11,14 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $employees = [
-            ['employee_id' => 'EMP001', 'name' => 'Maria Santos', 'email' => 'maria@dssm.local', 'position' => 'Cashier'],
-            ['employee_id' => 'EMP002', 'name' => 'John Rivera', 'email' => 'john@dssm.local', 'position' => 'Cashier'],
-            ['employee_id' => 'EMP003', 'name' => 'Ana Garcia', 'email' => 'ana@dssm.local', 'position' => 'Manager'],
-            ['employee_id' => 'EMP004', 'name' => 'Carlos Mendoza', 'email' => 'carlos@dssm.local', 'position' => 'Stock Keeper'],
-        ];
+        $employees = Employee::all();
 
-        foreach ($employees as $emp) {
+        foreach ($employees as $employee) {
             User::create([
-                'employee_id' => $emp['employee_id'],
-                'name' => $emp['name'],
-                'email' => $emp['email'],
+                'employee_id' => $employee->id, 
+                'name' => "{$employee->fname} {$employee->lname}",
+                'email' => strtolower($employee->fname) . '@dssm.local',
                 'password' => Hash::make('password123'),
-                'position' => $emp['position'],
                 'is_active' => true,
             ]);
         }

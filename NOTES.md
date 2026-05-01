@@ -29,3 +29,9 @@ CRUD for every entity
 Interface for that CRUD (for each entity also)
 Normalization
 Implement the Triggers and Views in the backend
+
+# April 27, 2026
+
+Bale = include desc, and other attributes  
+Separate Items into a new Interface
+Redesign delete confirmation pop-up

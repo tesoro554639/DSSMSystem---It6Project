@@ -127,18 +127,18 @@ class SampleDataSeeder extends Seeder
         $todayTransactions = [
             [
                 'items' => ['TOP-001', 'TOP-002', 'BOT-001'],
-                'payment' => 'cash',
-                'cashier' => 'EMP001',
+                'method_id' => 1,
+                'cashier' => 1,
             ],
             [
                 'items' => ['DRS-001', 'ACC-001'],
-                'payment' => 'gcash',
-                'cashier' => 'EMP002',
+                'method_id' => 2,
+                'cashier' => 2,
             ],
             [
                 'items' => ['TOP-005', 'BOT-003', 'FOOT-001'],
-                'payment' => 'cash',
-                'cashier' => 'EMP001',
+                'method_id' => 1,
+                'cashier' => 3,
             ],
         ];
 
@@ -164,7 +164,7 @@ class SampleDataSeeder extends Seeder
                 'transaction_number' => Transaction::generateTransactionNumber(),
                 'subtotal' => $total,
                 'total_amount' => $total,
-                'payment_method' => $txnData['payment'],
+                'method_id' => $txnData['method_id'],
             ]);
 
             foreach ($txnItems as $ti) {
@@ -179,13 +179,13 @@ class SampleDataSeeder extends Seeder
         $yesterdayTransactions = [
             [
                 'items' => ['TOP-003', 'BOT-002'],
-                'payment' => 'cash',
-                'cashier' => 'EMP002',
+                'method_id' => 1,
+                'cashier' => 1,
             ],
             [
                 'items' => ['DRS-002', 'OUT-001'],
-                'payment' => 'card',
-                'cashier' => 'EMP003',
+                'method_id' => 2,
+                'cashier' => 3,
             ],
         ];
 
@@ -211,7 +211,7 @@ class SampleDataSeeder extends Seeder
                 'transaction_number' => Transaction::generateTransactionNumber(),
                 'subtotal' => $total,
                 'total_amount' => $total,
-                'payment_method' => $txnData['payment'],
+                'method_id' => $txnData['method_id'],
                 'created_at' => Carbon::now()->subDay(),
             ]);
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\PaymentMethod;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use Carbon\Carbon;
@@ -15,10 +16,12 @@ class ReportsController extends Controller
     {
         $date = $request->input('date', Carbon::today()->toDateString());
 
-        $transactions = Transaction::with(['user', 'items'])
-            ->whereDate('created_at', $date)
-            ->orderByDesc('created_at')
-            ->get();
+        $transactions = Transaction::with(['user', 'items', 'paymentMethod'])
+        ->whereDate('created_at', $date)
+        ->orderByDesc('created_at')
+        ->get();
+
+        $paymentMethod = PaymentMethod::all();
 
         $totalSales = $transactions->sum('total_amount');
         $totalTransactions = $transactions->count();
@@ -26,8 +29,9 @@ class ReportsController extends Controller
             $query->whereDate('created_at', $date);
         })->sum('quantity');
 
-        $paymentBreakdown = $transactions->groupBy('payment_method')
-            ->map(fn ($group) => $group->sum('total_amount'));
+        $paymentBreakdown = $transactions->groupBy(function ($txn) {
+        return $txn->paymentMethod->method_name ?? 'Unknown';
+        })->map(fn ($group) => $group->sum('total_amount'));
 
         return view('reports.daily-sales', compact(
             'transactions',

@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
 
 class Transaction extends Model
 {
-    protected $fillable = ['user_id', 'transaction_number', 'subtotal', 'total_amount', 'payment_method', 'notes'];
+    protected $fillable = ['user_id', 'transaction_number', 'subtotal', 'total_amount', 'method_id', 'notes'];
 
     protected $casts = [
         'subtotal' => 'decimal:2',
@@ -25,6 +27,11 @@ class Transaction extends Model
         return $this->belongsToMany(Item::class, 'transaction_items')
             ->withPivot('quantity', 'unit_price', 'subtotal')
             ->withTimestamps();
+    }
+
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'method_id');
     }
 
     public static function generateTransactionNumber(): string

@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('transaction_number')->unique();
             $table->decimal('subtotal', 12, 2);
             $table->decimal('total_amount', 12, 2);
-            $table->enum('payment_method', ['cash', 'gcash', 'card', 'mixed'])->default('cash');
+            $table->foreignId('method_id')->constrained('payment_methods')->onDelete('restrict');
             $table->text('notes')->nullable();
             $table->timestamps();
         });

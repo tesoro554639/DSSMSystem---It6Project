@@ -3,148 +3,201 @@
 @section('title', 'Daily Sales - DSSM')
 
 @section('content')
-<div class="container-fluid">
-    <h2 class="mb-4">Daily Sales Report</h2>
+    <div class="container-fluid">
+        <h2 class="fw-bold text-dark mb-4">Daily Sales Report</h2>
 
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <form method="GET" class="row g-3 align-items-center">
-                        <div class="col-auto">
-                            <label for="date" class="form-label">Select Date</label>
-                        </div>
-                        <div class="col-auto">
-                            <input type="date" name="date" id="date" class="form-control" value="{{ $date }}">
-                        </div>
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-primary">View Report</button>
-                        </div>
-                    </form>
+        <!-- Date Filter -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-body p-4">
+                        <form method="GET" class="row g-3 align-items-center">
+                            <div class="col-auto">
+                                <label for="date" class="form-label fw-semibold text-secondary mb-0">Select Date:</label>
+                            </div>
+                            <div class="col-auto">
+                                <input type="date" name="date" id="date" class="form-control shadow-sm border-0 bg-light"
+                                    value="{{ $date }}">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary shadow-sm px-4">
+                                    <i class="bi bi-calendar-check me-2"></i>View Report
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card border-primary">
-                <div class="card-body">
-                    <h6 class="text-muted">Total Sales</h6>
-                    <h3 class="mb-0">₱{{ number_format($totalSales, 2) }}</h3>
+        <!-- Stat Cards -->
+        <div class="row mb-4 g-3">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-3 border-start border-primary border-4 h-100">
+                    <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted fw-semibold mb-2 text-uppercase" style="font-size: 0.8rem;">Total Sales
+                            </h6>
+                            <h3 class="mb-0 fw-bold text-dark">₱{{ number_format($totalSales, 2) }}</h3>
+                        </div>
+                        <i class="bi bi-cash-coin fs-1 text-primary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-3 border-start border-success border-4 h-100">
+                    <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted fw-semibold mb-2 text-uppercase" style="font-size: 0.8rem;">Transactions
+                            </h6>
+                            <h3 class="mb-0 fw-bold text-dark">{{ $totalTransactions }}</h3>
+                        </div>
+                        <i class="bi bi-receipt fs-1 text-success opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-3 border-start border-info border-4 h-100">
+                    <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted fw-semibold mb-2 text-uppercase" style="font-size: 0.8rem;">Items Sold
+                            </h6>
+                            <h3 class="mb-0 fw-bold text-dark">{{ $totalItemsSold }}</h3>
+                        </div>
+                        <i class="bi bi-bag-check fs-1 text-info opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm rounded-3 border-start border-warning border-4 h-100">
+                    <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted fw-semibold mb-2 text-uppercase" style="font-size: 0.8rem;">Avg. per
+                                Transaction</h6>
+                            <h3 class="mb-0 fw-bold text-dark">
+                                ₱{{ $totalTransactions > 0 ? number_format($totalSales / $totalTransactions, 2) : '0.00' }}
+                            </h3>
+                        </div>
+                        <i class="bi bi-calculator fs-1 text-warning opacity-50"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card border-success">
-                <div class="card-body">
-                    <h6 class="text-muted">Transactions</h6>
-                    <h3 class="mb-0">{{ $totalTransactions }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card border-info">
-                <div class="card-body">
-                    <h6 class="text-muted">Items Sold</h6>
-                    <h3 class="mb-0">{{ $totalItemsSold }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card border-warning">
-                <div class="card-body">
-                    <h6 class="text-muted">Avg. per Transaction</h6>
-                    <h3 class="mb-0">₱{{ $totalTransactions > 0 ? number_format($totalSales / $totalTransactions, 2) : '0.00' }}</h3>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Payment Method Breakdown</h5>
+        <!-- Breakdown & Quick Links -->
+        <div class="row mb-4 g-4">
+            <div class="col-md-8">
+                <div class="card border-0 shadow-sm rounded-3 h-100">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <h5 class="mb-0 fw-bold text-dark">Payment Method Breakdown</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        @if($paymentBreakdown->count() > 0)
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="text-uppercase text-muted small fw-semibold py-3 ps-4">Method</th>
+                                        <th class="text-uppercase text-muted small fw-semibold py-3 pe-4 text-end">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="border-top-0">
+                                    @foreach($paymentBreakdown as $method => $amount)
+                                        <tr>
+                                            <td class="ps-4 py-3 fw-medium text-dark">{{ ucfirst($method) }}</td>
+                                            <td class="pe-4 py-3 text-end fw-bold text-success">₱{{ number_format($amount, 2) }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <div class="text-center py-5">
+                                <i class="bi bi-wallet2 fs-1 d-block mb-2 opacity-50"></i>
+                                <p class="text-muted mb-0">No transactions for this date</p>
+                            </div>
+                        @endif
+                    </div>
                 </div>
-                <div class="card-body">
-                    @if($paymentBreakdown->count() > 0)
-                    <table class="table">
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-3 h-100">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <h5 class="mb-0 fw-bold text-dark">Quick Links</h5>
+                    </div>
+                    <div class="card-body p-4 d-flex flex-column justify-content-center">
+                        <a href="{{ route('reports.inventory-status') }}"
+                            class="btn btn-light border shadow-sm py-3 fw-semibold">
+                            <i class="bi bi-clipboard-data text-primary me-2"></i>View Inventory Status
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+            <div class="card-header bg-white border-bottom py-3">
+                <h5 class="mb-0 fw-bold text-dark">Transactions ({{ \Carbon\Carbon::parse($date)->format('M d, Y') }})</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
                         <tr>
-                            <th>Method</th>
-                            <th class="text-end">Amount</th>
+                            <th class="text-uppercase text-muted small fw-semibold py-3 ps-4">Transaction #</th>
+                            <th class="text-uppercase text-muted small fw-semibold py-3">Time</th>
+                            <th class="text-uppercase text-muted small fw-semibold py-3">Cashier</th>
+                            <th class="text-uppercase text-muted small fw-semibold py-3">Items</th>
+                            <th class="text-uppercase text-muted small fw-semibold py-3">Payment</th>
+                            <th class="text-uppercase text-muted small fw-semibold py-3">Total</th>
+                            <th class="text-uppercase text-muted small fw-semibold py-3 pe-4 text-end">Actions</th>
                         </tr>
-                        @foreach($paymentBreakdown as $method => $amount)
-                        <tr>
-                            <td>{{ ucfirst($method) }}</td>
-                            <td class="text-end">₱{{ number_format($amount, 2) }}</td>
-                        </tr>
-                        @endforeach
-                    </table>
-                    @else
-                    <p class="text-muted text-center">No transactions for this date</p>
-                    @endif
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Quick Links</h5>
-                </div>
-                <div class="card-body">
-                    <a href="{{ route('reports.inventory-status') }}" class="btn btn-outline-primary w-100 mb-2">
-                        <i class="bi bi-clipboard-data me-2"></i>Inventory Status
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+                    </thead>
+                    <tbody class="border-top-0">
+                        @forelse($transactions as $txn)
+                            <tr>
+                                <td class="ps-4 py-3 fw-bold text-primary">{{ $txn->transaction_number }}</td>
+                                <td class="py-3 text-secondary">{{ $txn->created_at->format('h:i A') }}</td>
+                                <td class="py-3 text-dark fw-medium">{{ $txn->user->name }}</td>
+                                <td class="py-3 text-secondary">{{ $txn->items->count() }}</td>
+                                <td class="py-3">
+                                    @php
+                                        // Convert to lowercase for reliable comparison
+                                        $method = strtolower($txn->paymentMethod->method_name ?? '');
 
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">Transactions</h5>
-        </div>
-        <div class="card-body p-0">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Transaction #</th>
-                        <th>Time</th>
-                        <th>Cashier</th>
-                        <th>Items</th>
-                        <th>Payment</th>
-                        <th>Total</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($transactions as $txn)
-                    <tr>
-                        <td>{{ $txn->transaction_number }}</td>
-                        <td>{{ $txn->created_at->format('h:i A') }}</td>
-                        <td>{{ $txn->user->name }}</td>
-                        <td>{{ $txn->items->count() }}</td>
-                        <td>
-                            <span class="badge bg-{{ $txn->payment_method == 'cash' ? 'success' : ($txn->payment_method == 'gcash' ? 'info' : 'warning') }}">
-                                {{ ucfirst($txn->payment_method) }}
-                            </span>
-                        </td>
-                        <td class="fw-bold">₱{{ number_format($txn->total_amount, 2) }}</td>
-                        <td>
-                            <a href="{{ route('sales.show', $txn->id) }}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="7" class="text-center text-muted py-4">No transactions for this date</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                        $badgeColor = match ($method) {
+                                            'cash' => 'success',
+                                            'gcash' => 'info',
+                                            'maya' => 'primary', // Optional: added for common PH e-wallets
+                                            default => 'warning',
+                                        };
+                                    @endphp
+                                    <span
+                                        class="badge bg-{{ $badgeColor }} bg-opacity-10 text-{{ $badgeColor }} border border-{{ $badgeColor }}">
+                                        {{ ucfirst($txn->paymentMethod->method_name ?? 'Unknown') }}
+                                    </span>
+                                </td>span>
+                                </td>
+                                <td class="py-3 fw-bold text-dark">₱{{ number_format($txn->total_amount, 2) }}</td>
+                                <td class="pe-4 py-3 text-end">
+                                    <a href="{{ route('sales.show', $txn->id) }}" class="btn btn-sm btn-light border shadow-sm"
+                                        title="View Details">
+                                        <i class="bi bi-eye text-primary"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="text-muted d-flex flex-column align-items-center">
+                                        <i class="bi bi-receipt fs-1 mb-2 opacity-50"></i>
+                                        <span class="fw-medium">No transactions for this date</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 @endsection

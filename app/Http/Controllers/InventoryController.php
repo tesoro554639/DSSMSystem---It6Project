@@ -55,4 +55,16 @@ class InventoryController extends Controller
 
         return response()->json($inventory);
     }
+
+    public function destroy($id)
+    {
+        $item = Item::findOrFail($id);
+        
+        $baleId = $item->bale_id; 
+        
+        $item->delete();
+        
+        return redirect()->route('inventory.index', $baleId)
+            ->with('success', 'Item removed successfully.');
+    }
 }
