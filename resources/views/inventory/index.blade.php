@@ -44,20 +44,11 @@
             </div>
         </div>
 
-        <!-- Success Message Alert -->
+        <!-- Alerts -->
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
                 <i class="bi bi-check-circle-fill me-2"></i>
                 {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
-        <!-- Error Message Alert -->
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                {{ session('error') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
@@ -76,13 +67,10 @@
                         </select>
                     </div>
                     <div class="col-md-3">
+                        <!-- Simplified Status Filter -->
                         <select name="status" class="form-select shadow-sm border-0 bg-light">
                             <option value="">All Statuses</option>
-                            @foreach($statuses as $status)
-                                <option value="{{ $status->id }}" {{ request('status') == $status->id ? 'selected' : '' }}>
-                                    {{ $status->name }}
-                                </option>
-                            @endforeach
+                            <option value="available" {{ request('status') == 'available' ? 'selected' : '' }}>Available</option>
                             <option value="sold" {{ request('status') == 'sold' ? 'selected' : '' }}>Sold</option>
                         </select>
                     </div>
@@ -101,7 +89,6 @@
                             <th class="text-uppercase text-muted small fw-semibold py-3">Category</th>
                             <th class="text-uppercase text-muted small fw-semibold py-3">Status</th>
                             <th class="text-uppercase text-muted small fw-semibold py-3">Price</th>
-                            <th class="text-uppercase text-muted small fw-semibold py-3">Qty</th>
                             <th class="text-uppercase text-muted small fw-semibold py-3">Bale</th>
                             <th class="text-uppercase text-muted small fw-semibold py-3 pe-4 text-end">Actions</th>
                         </tr>
@@ -112,23 +99,15 @@
                                 <td class="ps-4 py-3 fw-bold text-dark">{{ $item->item_code }}</td>
                                 <td class="py-3 text-secondary">{{ $item->category->name }}</td>
                                 <td class="py-3">
-                                    @if(!$item->is_sold)
-                                        @if($item->status_id == 1)
-                                            <span class="badge bg-success bg-opacity-10 text-success border border-success">{{ $item->status->name }}</span>
-                                        @elseif($item->status_id == 2)
-                                            <span class="badge bg-info bg-opacity-10 text-info border border-info">{{ $item->status->name }}</span>
-                                        @elseif($item->status_id == 3)
-                                            <span class="badge bg-warning bg-opacity-10 text-warning border border-warning">{{ $item->status->name }}</span>
-                                        @endif
+                                    @if($item->is_sold)
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary">Sold</span>
                                     @else
-                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary">{{ $item->is_sold ? 'Sold' : '' }}</span>
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success">Available</span>
                                     @endif
                                 </td>
                                 <td class="py-3 fw-semibold text-dark">₱{{ number_format($item->price, 2) }}</td>
-                                <td class="py-3 text-secondary">{{ $item->quantity }}</td>
                                 <td class="py-3 text-secondary">{{ $item->bale->bale_number ?? 'N/A' }}</td>
                                 <td class="pe-4 py-3 text-end">
-                                    <!-- Grouped Actions -->
                                     <div class="btn-group btn-group-sm shadow-sm" role="group">
                                         <a href="{{ route('inventory.show', $item->id) }}" class="btn btn-light border" title="View Details">
                                             <i class="bi bi-eye text-primary"></i>
@@ -138,11 +117,10 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-5">
+                                <td colspan="6" class="text-center py-5">
                                     <div class="text-muted d-flex flex-column align-items-center">
                                         <i class="bi bi-search fs-1 mb-2 opacity-50"></i>
                                         <span class="fw-medium">No items found</span>
-                                        <small>Adjust your filters or add new stock.</small>
                                     </div>
                                 </td>
                             </tr>

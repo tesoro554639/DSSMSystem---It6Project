@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Transaction;
-use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,8 +19,9 @@ class SalesController extends Controller
 
     public function create()
     {
+        // Removed 'status' relationship from eager loading
         $items = Item::where('is_sold', false)
-            ->with(['category', 'status', 'bale'])
+            ->with(['category', 'bale'])
             ->get()
             ->groupBy('category.name');
         
@@ -35,7 +35,6 @@ class SalesController extends Controller
         $validated = $request->validate([
             'items' => 'required|array|min:1',
             'items.*.item_id' => 'required|exists:items,id',
-            'items.*.quantity' => 'required|integer|min:1',
             'method_id' => 'required|exists:payment_methods,id', 
             'notes' => 'nullable|string',
         ]);
@@ -52,21 +51,18 @@ class SalesController extends Controller
                         throw new \Exception("Item {$item->item_code} is already sold.");
                     }
 
-                    // PHP calculation is only needed for the main Transaction total
-                    $itemSubtotal = $item->price * $itemData['quantity'];
-                    $totalTransactionAmount += $itemSubtotal;
+                    // In One Row = One Item, quantity is always 1
+                    $totalTransactionAmount += $item->price;
 
                     $transactionItems[$item->id] = [
-                        'quantity' => $itemData['quantity'],
+                        'quantity' => 1,
                         'unit_price' => $item->price,
-
-                        
-                        'subtotal' => 0,  // the calc_subtotal trigger will overwrite this
+                        'subtotal' => $item->price, 
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
 
-                    // $item->update(['is_sold' => true]); -> trigger handles this
+                    // Trigger 'after_sale_sync' handles setting is_sold = 1 and quantity = 0
                 }
 
                 $transaction = Transaction::create([
@@ -78,6 +74,7 @@ class SalesController extends Controller
                     'notes' => $validated['notes'] ?? null,
                 ]);
 
+                // This attach() fires the database triggers
                 $transaction->items()->attach($transactionItems);
 
                 return $transaction;
@@ -93,7 +90,8 @@ class SalesController extends Controller
 
     public function show($id)
     {
-        $transaction = Transaction::with(['user', 'items.category', 'items.status', 'paymentMethod'])
+        // Removed 'status' relationship from eager loading
+        $transaction = Transaction::with(['user', 'items.category', 'paymentMethod'])
             ->findOrFail($id); 
 
         return view('sales.show', compact('transaction'));
@@ -101,8 +99,9 @@ class SalesController extends Controller
 
     public function getAvailableItems()
     {
+        // Removed 'status' relationship
         $items = Item::where('is_sold', false)
-            ->with(['category', 'status', 'bale'])
+            ->with(['category', 'bale'])
             ->get();
         return response()->json($items);
     }

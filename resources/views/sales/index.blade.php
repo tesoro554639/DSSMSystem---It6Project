@@ -48,7 +48,8 @@
                                 <td class="py-3">
                                     @php
                                         $methodName = strtolower($txn->paymentMethod->method_name);
-                                        $badgeColor = $methodName == 'cash' ? 'success' : ($methodName == 'gcash' ? 'info' : 'warning');
+                                        // Case-insensitive check for common payment types in Davao
+                                        $badgeColor = $methodName == 'cash' ? 'success' : (str_contains($methodName, 'gcash') ? 'info' : 'warning');
                                     @endphp
                                     <span
                                         class="badge bg-{{ $badgeColor }} bg-opacity-10 text-{{ $badgeColor }} border border-{{ $badgeColor }}">
@@ -75,7 +76,6 @@
                                     <div class="text-muted d-flex flex-column align-items-center">
                                         <i class="bi bi-receipt fs-1 mb-2 opacity-50"></i>
                                         <span class="fw-medium">No transactions found</span>
-                                        <small>Create a new transaction to get started.</small>
                                     </div>
                                 </td>
                             </tr>

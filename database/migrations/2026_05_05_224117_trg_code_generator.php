@@ -10,7 +10,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. BALE code generator
+        //  BALE code generator
         DB::unprepared("DROP TRIGGER IF EXISTS before_bale_insert_generate_code");
         DB::unprepared("
             CREATE TRIGGER before_bale_insert_generate_code
@@ -23,7 +23,7 @@ return new class extends Migration
             END
         ");
 
-        // 2. ITEM code generator
+        // ITEM code generator
         DB::unprepared("DROP TRIGGER IF EXISTS before_item_insert_generate_code");
         DB::unprepared("
             CREATE TRIGGER before_item_insert_generate_code
@@ -33,12 +33,13 @@ return new class extends Migration
                 DECLARE cat_prefix VARCHAR(10);
                 DECLARE next_num INT;
                 
+                -- get the 3-letter prefix from the category name
                 SELECT UPPER(LEFT(name, 3)) INTO cat_prefix 
                 FROM categories 
                 WHERE id = NEW.category_id;
                 
-                -- Optimization: Use the specific category to increment the unique code
-                SELECT COUNT(*) + 1 INTO next_num 
+                SELECT COALESCE(MAX(CAST(SUBSTRING_INDEX(item_code, '-', -1) AS UNSIGNED)), 0) + 1 
+                INTO next_num 
                 FROM items 
                 WHERE category_id = NEW.category_id;
                 

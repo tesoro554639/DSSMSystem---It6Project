@@ -54,19 +54,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="total_items" class="form-label fw-semibold text-secondary">Total
-                                        Items</label>
-                                    <input type="number" name="total_items" id="total_items"
-                                        class="form-control @error('total_items') is-invalid @enderror"
-                                        value="{{ old('total_items', $bale->total_items) }}" min="1" required>
-                                    @error('total_items')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
 
-                            <div class="row mb-4">
                                 <div class="col-md-6">
                                     <label for="purchase_date" class="form-label fw-semibold text-secondary">Purchase
                                         Date</label>
@@ -77,7 +65,10 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-12">
                                     <label for="notes" class="form-label fw-semibold text-secondary">Notes</label>
                                     <textarea name="notes" id="notes" class="form-control"
                                         rows="3">{{ old('notes', $bale->notes) }}</textarea>

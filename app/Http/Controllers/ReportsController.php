@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
-use App\Models\PaymentMethod;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use Carbon\Carbon;
@@ -16,21 +15,22 @@ class ReportsController extends Controller
     {
         $date = $request->input('date', Carbon::today()->toDateString());
 
-        $transactions = Transaction::with(['user', 'items', 'paymentMethod'])
-        ->whereDate('created_at', $date)
-        ->orderByDesc('created_at')
-        ->get();
-
-        $paymentMethod = PaymentMethod::all();
+        // Removed 'items.status' from eager loading
+        $transactions = Transaction::with(['user', 'items.category', 'paymentMethod'])
+            ->whereDate('created_at', $date)
+            ->orderByDesc('created_at')
+            ->get();
 
         $totalSales = $transactions->sum('total_amount');
         $totalTransactions = $transactions->count();
+
+        // Refactored: In One Row = One Item, total items sold is the count of pivot records
         $totalItemsSold = TransactionItem::whereHas('transaction', function ($query) use ($date) {
             $query->whereDate('created_at', $date);
-        })->sum('quantity');
+        })->count();
 
         $paymentBreakdown = $transactions->groupBy(function ($txn) {
-        return $txn->paymentMethod->method_name ?? 'Unknown';
+            return $txn->paymentMethod->method_name ?? 'Unknown';
         })->map(fn ($group) => $group->sum('total_amount'));
 
         return view('reports.daily-sales', compact(
@@ -47,13 +47,14 @@ class ReportsController extends Controller
     {
         $categoryId = $request->input('category');
 
-        $inventoryQuery = Item::with(['category', 'status', 'bale.supplier']);
+        // Removed 'status' relationship
+        $inventoryQuery = Item::with(['category', 'bale.supplier']);
 
         if ($categoryId) {
             $inventoryQuery->where('category_id', $categoryId);
         }
 
-        $items = $inventoryQuery->orderByDesc('created_at')->paginate(10);
+        $items = $inventoryQuery->orderByDesc('created_at')->paginate(15);
 
         $categorySummary = DB::table('items')
             ->join('categories', 'items.category_id', '=', 'categories.id')
@@ -68,7 +69,8 @@ class ReportsController extends Controller
             'total' => Item::count(),
             'available' => Item::where('is_sold', false)->count(),
             'sold' => Item::where('is_sold', true)->count(),
-            'total_value' => Item::where('is_sold', false)->sum(DB::raw('price * quantity')),
+            // Simplified: quantity is always 1 for available items in this model
+            'total_value' => Item::where('is_sold', false)->sum('price'),
         ];
 
         return view('reports.inventory-status', compact('items', 'categorySummary', 'overallStats'));
@@ -76,7 +78,8 @@ class ReportsController extends Controller
 
     public function transactionReceipt(Transaction $transaction)
     {
-        $transaction->load(['user', 'items.category', 'items.status']);
+        // Removed 'items.status' from eager loading
+        $transaction->load(['user', 'items.category', 'paymentMethod']);
         return view('reports.receipt', compact('transaction'));
     }
 }

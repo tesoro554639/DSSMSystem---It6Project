@@ -4,38 +4,40 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Item;
-use App\Models\Status;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Item::with(['category', 'status', 'bale.supplier']);
+        // Removed 'status' from eager loading as the relationship no longer exists
+        $query = Item::with(['category', 'bale.supplier']);
 
+        // Filter by Category
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
         }
 
+        // Simplified Status Filtering
+        // Since status_id is gone, we only filter by the is_sold boolean
         if ($request->filled('status')) {
             if ($request->status === 'sold') {
                 $query->where('is_sold', true);
-            } else {
-                $query->where('status_id', $request->status)
-                    ->where('is_sold', false);
+            } elseif ($request->status === 'available') {
+                $query->where('is_sold', false);
             }
         }
 
-        $items = $query->orderByDesc('created_at')->paginate(10);
+        $items = $query->orderByDesc('created_at')->paginate(15);
         $categories = Category::all();
-        $statuses = Status::all();
 
+        // Stats for the top cards
         $availableCount = Item::where('is_sold', false)->count();
         $soldCount = Item::where('is_sold', true)->count();
         $totalCount = Item::count();
 
         return view('inventory.index', compact(
-            'items', 'categories', 'statuses', 
+            'items', 'categories', 
             'availableCount', 'soldCount', 'totalCount'
         ));
     }
@@ -43,12 +45,15 @@ class InventoryController extends Controller
     public function show($id)
     {
         $item = Item::findOrFail($id);
-        $item->load(['category', 'status', 'bale.supplier', 'transactions']);
+        // Removed 'status' from eager loading
+        $item->load(['category', 'bale.supplier', 'transactions']);
+        
         return view('inventory.show', compact('item'));
     }
 
     public function getInventoryByCategory()
     {
+        // This is useful for dashboard charts
         $inventory = Category::withCount(['items' => function ($query) {
             $query->where('is_sold', false);
         }])->get();
@@ -59,12 +64,9 @@ class InventoryController extends Controller
     public function destroy($id)
     {
         $item = Item::findOrFail($id);
-        
-        $baleId = $item->bale_id; 
-        
         $item->delete();
         
-        return redirect()->route('inventory.index', $baleId)
+        return redirect()->route('inventory.index')
             ->with('success', 'Item removed successfully.');
     }
 }

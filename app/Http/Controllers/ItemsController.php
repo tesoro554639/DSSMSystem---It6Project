@@ -6,13 +6,11 @@ use App\Models\Item;
 use App\Models\Category;
 use App\Models\Bale;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class ItemsController extends Controller
 {
     public function index()
     {
-        // Removed 'status' from eager loading
         $items = Item::with(['category', 'bale'])->orderByDesc('created_at')->paginate(15);
         return view('items.index', compact('items'));
     }
@@ -20,9 +18,7 @@ class ItemsController extends Controller
     public function create()
     {
         $categories = Category::all();
-        // Removed Status::all()
         $bales = Bale::orderByDesc('created_at')->get();
-        
         return view('items.create', compact('categories', 'bales'));
     }
 
@@ -31,15 +27,11 @@ class ItemsController extends Controller
         $validated = $request->validate([
             'bale_id' => 'required|exists:bales,id',
             'category_id' => 'required|exists:categories,id',
-            // item_code and status_id removed: handled by DB triggers
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
         ]);
 
-        // Force quantity to 1 for the 'One Row = One Item' model
-        $validated['quantity'] = 1;
-        $validated['is_sold'] = false;
-
+        // Triggers handle item_code, is_sold (default 0), and quantity (default 1)
         $item = Item::create($validated);
 
         return redirect()->route('stock-in.show', $item->bale_id)
@@ -48,7 +40,6 @@ class ItemsController extends Controller
 
     public function show($id)
     {
-        // Removed 'status' from eager loading
         $item = Item::with(['category', 'bale', 'transactions'])->findOrFail($id);
         return view('items.show', compact('item'));
     }
@@ -57,8 +48,6 @@ class ItemsController extends Controller
     {
         $item = Item::findOrFail($id);
         $categories = Category::all();
-        // Removed Status::all()
-
         return view('items.edit', compact('item', 'categories'));
     }
 
@@ -67,13 +56,12 @@ class ItemsController extends Controller
         $item = Item::findOrFail($id);
 
         $validated = $request->validate([
-            // item_code removed from update: usually shouldn't change once generated
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'is_sold' => 'required|boolean', // Added to allow manual status toggling
         ]);
 
+        // is_sold is NOT updated here to preserve transaction integrity
         $item->update($validated);
 
         return redirect()->route('stock-in.show', $item->bale_id)
@@ -87,6 +75,6 @@ class ItemsController extends Controller
         $item->delete();
         
         return redirect()->route('stock-in.show', $baleId)
-            ->with('success', 'Item removed from the bale successfully.');
+            ->with('success', 'Item removed successfully.');
     }
 }

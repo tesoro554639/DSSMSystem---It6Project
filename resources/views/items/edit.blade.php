@@ -4,31 +4,28 @@
 
 @section('content')
     <div class="container-fluid">
-        <h2 class="mb-4">Edit Item: {{ $item->item_code }}</h2>
+        <h2 class="fw-bold text-dark mb-4">Edit Item: {{ $item->item_code }}</h2>
 
         <div class="row">
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-body">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-body p-4">
                         <form method="POST" action="{{ route('items.update', $item->id) }}">
                             @csrf
                             @method('PUT')
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="item_code" class="form-label">Item Code</label>
-                                    <input type="text" name="item_code" id="item_code"
-                                        class="form-control @error('item_code') is-invalid @enderror"
-                                        value="{{ old('item_code', $item->item_code) }}" required>
-                                    @error('item_code')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <label class="form-label text-muted small fw-bold text-uppercase">Item Code</label>
+                                    <input type="text" class="form-control bg-light border-0 fw-bold"
+                                        value="{{ $item->item_code }}" readonly>
+                                    <div class="form-text text-info">Managed automatically by the system.</div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="category_id" class="form-label">Category</label>
+                                    <label for="category_id"
+                                        class="form-label text-muted small fw-bold text-uppercase">Category</label>
                                     <select name="category_id" id="category_id"
                                         class="form-select @error('category_id') is-invalid @enderror" required>
-                                        <option value="">Select Category</option>
                                         @foreach($categories as $category)
                                             <option value="{{ $category->id }}" {{ old('category_id', $item->category_id) == $category->id ? 'selected' : '' }}>
                                                 {{ $category->name }}
@@ -42,21 +39,9 @@
                             </div>
 
                             <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="status_id" class="form-label">Status</label>
-                                    <select name="status_id" id="status_id"
-                                        class="form-select @error('status_id') is-invalid @enderror" required>
-                                        <option value="">Select Status</option>
-                                        <span class="badge {{ $item->is_sold ? 'bg-danger' : 'bg-success' }}">
-                                            {{ $item->is_sold ? 'Sold' : 'Available' }}
-                                        </span>
-                                    </select>
-                                    @error('status_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="price" class="form-label">Price (₱)</label>
+                                <div class="col-md-6">
+                                    <label for="price" class="form-label text-muted small fw-bold text-uppercase">Price
+                                        (₱)</label>
                                     <input type="number" name="price" id="price"
                                         class="form-control @error('price') is-invalid @enderror"
                                         value="{{ old('price', $item->price) }}" step="0.01" min="0" required>
@@ -64,45 +49,57 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="quantity" class="form-label">Quantity</label>
-                                    <input type="number" name="quantity" id="quantity"
-                                        class="form-control @error('quantity') is-invalid @enderror"
-                                        value="{{ old('quantity', $item->quantity) }}" min="1" required>
-                                    @error('quantity')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small fw-bold text-uppercase">Current Status</label>
+                                    <div class="mt-1">
+                                        @if($item->is_sold)
+                                            <span
+                                                class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary rounded-pill px-3 py-2">
+                                                <i class="bi bi-cart-check-fill me-1"></i> Sold
+                                            </span>
+                                        @else
+                                            <span
+                                                class="badge bg-success bg-opacity-10 text-success border border-success rounded-pill px-3 py-2">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Available
+                                            </span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
+                            <div class="row mb-4">
                                 <div class="col-md-12">
-                                    <label for="description" class="form-label">Description</label>
+                                    <label for="description"
+                                        class="form-label text-muted small fw-bold text-uppercase">Description</label>
                                     <input type="text" name="description" id="description"
                                         class="form-control @error('description') is-invalid @enderror"
                                         value="{{ old('description', $item->description) }}"
-                                        placeholder="Optional details about this item">
+                                        placeholder="Add details about this item...">
                                     @error('description')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
 
-                            <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-success">Update Item</button>
-                                <a href="{{ route('stock-in.show', $item->bale_id) }}" class="btn btn-secondary">Cancel</a>
+                            <div class="d-flex gap-2 border-top pt-4">
+                                <button type="submit" class="btn btn-primary px-4 shadow-sm fw-bold">Update Item</button>
+                                <a href="{{ route('stock-in.show', $item->bale_id) }}"
+                                    class="btn btn-light border px-4">Cancel</a>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
+
             <div class="col-md-4">
-                <div class="card bg-warning text-dark border-0">
-                    <div class="card-body">
-                        <h5><i class="bi bi-exclamation-triangle-fill me-2"></i>Editing Mode</h5>
-                        <p class="mb-0 small">If this item has already been sold, changing its price here will not alter
-                            past sales records. However, changing its category or status will update your current inventory
-                            metrics immediately.</p>
+                <div class="card bg-info bg-opacity-10 border-0 shadow-sm rounded-3">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold text-info text-uppercase mb-3"><i class="bi bi-shield-lock-fill me-2"></i>Data
+                            Integrity</h6>
+                        <p class="small text-secondary mb-0">
+                            Status management is automated. To make a <strong>Sold</strong> item available again, the
+                            associated transaction must be voided. This prevents discrepancies in your financial reports.
+                        </p>
                     </div>
                 </div>
             </div>

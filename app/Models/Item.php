@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Item extends Model
 {
-    protected $fillable = ['bale_id', 'category_id', 'status_id', 'item_code', 'description', 'price', 'quantity', 'is_sold'];
+    protected $fillable = ['bale_id', 'category_id', 'item_code', 'description', 'price', 'quantity', 'is_sold'];
 
     protected $casts = [
         'price' => 'decimal:2',
@@ -23,11 +23,6 @@ class Item extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
-    }
-
-    public function status(): BelongsTo
-    {
-        return $this->belongsTo(Status::class);
     }
 
     public function transactions(): BelongsToMany
