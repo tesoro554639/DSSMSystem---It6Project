@@ -125,7 +125,7 @@
                 <li class="nav-item">
                     <a class="nav-link text-white {{ request()->routeIs('categories.*') ? 'bg-primary rounded' : '' }}"
                         href="{{ route('categories.index') }}">
-                        <i class="bi bi-wallet2 me-2"></i> Categories
+                        <i class="bi bi-tags me-2"></i> Categories
                     </a>
                 </li>
 
