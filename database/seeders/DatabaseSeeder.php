@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
             PaymentMethodSeeder::class,
             SupplierSeeder::class,
             CategorySeeder::class,
-            StatusSeeder::class,
             SampleDataSeeder::class,
         ]);
     }

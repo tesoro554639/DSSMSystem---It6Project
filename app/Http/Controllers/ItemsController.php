@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Category;
-use App\Models\Status;
 use App\Models\Bale;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -13,17 +12,18 @@ class ItemsController extends Controller
 {
     public function index()
     {
-        $items = Item::with(['category', 'status', 'bale'])->orderByDesc('created_at')->paginate(15);
+        // Removed 'status' from eager loading
+        $items = Item::with(['category', 'bale'])->orderByDesc('created_at')->paginate(15);
         return view('items.index', compact('items'));
     }
 
     public function create()
     {
         $categories = Category::all();
-        $statuses = Status::all();
+        // Removed Status::all()
         $bales = Bale::orderByDesc('created_at')->get();
         
-        return view('items.create', compact('categories', 'statuses', 'bales'));
+        return view('items.create', compact('categories', 'bales'));
     }
 
     public function store(Request $request)
@@ -31,12 +31,14 @@ class ItemsController extends Controller
         $validated = $request->validate([
             'bale_id' => 'required|exists:bales,id',
             'category_id' => 'required|exists:categories,id',
-            'status_id' => 'required|exists:statuses,id',
-            'item_code' => 'required|string|unique:items,item_code',
+            // item_code and status_id removed: handled by DB triggers
             'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:1',
             'description' => 'nullable|string',
         ]);
+
+        // Force quantity to 1 for the 'One Row = One Item' model
+        $validated['quantity'] = 1;
+        $validated['is_sold'] = false;
 
         $item = Item::create($validated);
 
@@ -46,7 +48,8 @@ class ItemsController extends Controller
 
     public function show($id)
     {
-        $item = Item::with(['category', 'status', 'bale', 'transactions'])->findOrFail($id);
+        // Removed 'status' from eager loading
+        $item = Item::with(['category', 'bale', 'transactions'])->findOrFail($id);
         return view('items.show', compact('item'));
     }
 
@@ -54,9 +57,9 @@ class ItemsController extends Controller
     {
         $item = Item::findOrFail($id);
         $categories = Category::all();
-        $statuses = Status::all();
+        // Removed Status::all()
 
-        return view('items.edit', compact('item', 'categories', 'statuses'));
+        return view('items.edit', compact('item', 'categories'));
     }
 
     public function update(Request $request, $id)
@@ -64,16 +67,11 @@ class ItemsController extends Controller
         $item = Item::findOrFail($id);
 
         $validated = $request->validate([
-            'item_code' => [
-                'required', 
-                'string', 
-                Rule::unique('items', 'item_code')->ignore($id)
-            ],
+            // item_code removed from update: usually shouldn't change once generated
             'category_id' => 'required|exists:categories,id',
-            'status_id' => 'required|exists:statuses,id',
             'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:1',
             'description' => 'nullable|string',
+            'is_sold' => 'required|boolean', // Added to allow manual status toggling
         ]);
 
         $item->update($validated);
@@ -85,9 +83,7 @@ class ItemsController extends Controller
     public function destroy($id)
     {
         $item = Item::findOrFail($id);
-        
         $baleId = $item->bale_id; 
-        
         $item->delete();
         
         return redirect()->route('stock-in.show', $baleId)

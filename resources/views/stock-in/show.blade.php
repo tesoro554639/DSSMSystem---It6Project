@@ -143,59 +143,58 @@
             </div>
         </div>
 
-        @if($bale->items->count() < $bale->total_items)
-            <div class="card border-0 shadow-sm rounded-3 mt-4">
-                <div class="card-header bg-white border-bottom py-3">
-                    <h5 class="mb-0 fw-bold text-dark">Add Items to Bale</h5>
-                </div>
-                <div class="card-body p-4">
-                    <form method="POST" action="{{ route('stock-in.add-items', $bale->id) }}">
-                        @csrf
-                        <div id="items-container">
-                            <div class="row item-row mb-3">
-                                <div class="col-md-2">
-                                    <input type="text" name="items[0][item_code]" class="form-control" placeholder="Item Code"
-                                        required>
-                                </div>
-                                <div class="col-md-2">
-                                    <select name="items[0][category_id]" class="form-select" required>
-                                        <option value="">Category</option>
-                                        @foreach($categories as $cat)
-                                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <select name="items[0][status_id]" class="form-select" required>
-                                        <option value="">Status</option>
-                                        @foreach($statuses as $status)
-                                            <option value="{{ $status->id }}">{{ $status->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" name="items[0][price]" class="form-control" placeholder="Price"
-                                        step="0.01" min="0" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" name="items[0][quantity]" class="form-control" placeholder="Qty"
-                                        min="1" value="1" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="text" name="items[0][description]" class="form-control"
-                                        placeholder="Description (optional)">
-                                </div>
+
+        <div class="card border-0 shadow-sm rounded-3 mt-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <h5 class="mb-0 fw-bold text-dark">Add Items to Bale</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ route('stock-in.add-items', $bale->id) }}">
+                    @csrf
+                    <div id="items-container">
+                        <div class="row item-row mb-3">
+                            {{-- <div class="col-md-2">
+                                <input type="text" name="items[0][item_code]" class="form-control" placeholder="Item Code"
+                                    required>
+                            </div> --}}
+                            <div class="col-md-2">
+                                <select name="items[0][category_id]" class="form-select" required>
+                                    <option value="">Category</option>
+                                    @foreach($categories as $cat)
+                                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            {{-- <div class="col-md-2">
+                                <select name="items[0][status_id]" class="form-select" required>
+                                    <option value="">Status</option>
+                                    @foreach($statuses as $status)
+                                    <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div> --}}
+                            <div class="col-md-2">
+                                <input type="number" name="items[0][price]" class="form-control" placeholder="Price"
+                                    step="0.01" min="0" required>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" name="items[0][quantity]" class="form-control" placeholder="Qty"
+                                    min="1" value="1" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" name="items[0][description]" class="form-control"
+                                    placeholder="Description (optional)">
                             </div>
                         </div>
-                        <div class="d-flex gap-2 pt-3 border-top mt-4">
-                            <button type="submit" class="btn btn-primary shadow-sm rounded-3 px-4">Add Items</button>
-                            <button type="button" class="btn btn-light border shadow-sm rounded-3 px-4" id="add-item-btn">Add
-                                More Items</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="d-flex gap-2 pt-3 border-top mt-4">
+                        <button type="submit" class="btn btn-primary shadow-sm rounded-3 px-4">Add Items</button>
+                        <button type="button" class="btn btn-light border shadow-sm rounded-3 px-4" id="add-item-btn">Add
+                            More Items</button>
+                    </div>
+                </form>
             </div>
-        @endif
+        </div>
     </div>
 
     @push('scripts')
@@ -206,38 +205,38 @@
                 const row = document.createElement('div');
                 row.className = 'row item-row mb-3';
                 row.innerHTML = `
-                                    <div class="col-md-2">
-                                        <input type="text" name="items[${itemCount}][item_code]" class="form-control" placeholder="Item Code" required>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <select name="items[${itemCount}][category_id]" class="form-select" required>
-                                            <option value="">Category</option>
-                                            @foreach($categories as $cat)
-                                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <select name="items[${itemCount}][status_id]" class="form-select" required>
-                                            <option value="">Status</option>
-                                            @foreach($statuses as $status)
-                                                <option value="{{ $status->id }}">{{ $status->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="number" name="items[${itemCount}][price]" class="form-control" placeholder="Price" step="0.01" min="0" required>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="number" name="items[${itemCount}][quantity]" class="form-control" placeholder="Qty" min="1" value="1" required>
-                                    </div>
-                                    <div class="col-md-2 d-flex align-items-center">
-                                        <input type="text" name="items[${itemCount}][description]" class="form-control" placeholder="Description (optional)">
-                                        <button type="button" class="btn btn-outline-danger btn-sm ms-2 rounded-3 shadow-sm" onclick="this.closest('.item-row').remove()">
-                                            <i class="bi bi-x"></i>
-                                        </button>
-                                    </div>
-                                `;
+                                                    // <div class="col-md-2">
+                                                    //     <input type="text" name="items[${itemCount}][item_code]" class="form-control" placeholder="Item Code" required>
+                                                    // </div>
+                                                    <div class="col-md-2">
+                                                        <select name="items[${itemCount}][category_id]" class="form-select" required>
+                                                            <option value="">Category</option>
+                                                            @foreach($categories as $cat)
+                                                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    // <div class="col-md-2">
+                                                    //     <select name="items[${itemCount}][status_id]" class="form-select" required>
+                                                    //         <option value="">Status</option>
+                                                    //         @foreach($statuses as $status)
+                                                        //             <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                                    //         @endforeach
+                                                    //     </select>
+                                                    // </div>
+                                                    <div class="col-md-2">
+                                                        <input type="number" name="items[${itemCount}][price]" class="form-control" placeholder="Price" step="0.01" min="0" required>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="number" name="items[${itemCount}][quantity]" class="form-control" placeholder="Qty" min="1" value="1" required>
+                                                    </div>
+                                                    <div class="col-md-4 d-flex align-items-center">
+                                                        <input type="text" name="items[${itemCount}][description]" class="form-control" placeholder="Description (optional)">
+                                                        <button type="button" class="btn btn-outline-danger btn-sm ms-2 rounded-3 shadow-sm" onclick="this.closest('.item-row').remove()">
+                                                            <i class="bi bi-x"></i>
+                                                        </button>
+                                                    </div>
+                                                `;
                 container.appendChild(row);
                 itemCount++;
             });

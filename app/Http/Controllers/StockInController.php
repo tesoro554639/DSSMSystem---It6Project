@@ -28,18 +28,19 @@ class StockInController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'bale_number' => 'required|string|unique:bales,bale_number',
-            'supplier_id' => 'required|exists:suppliers,id',
+            // 'bale_number'    => 'required|string|unique:bales,bale_number', -> the code generator trigger handles this
+            'supplier_id'    => 'required|exists:suppliers,id',
             'purchase_price' => 'required|numeric|min:0',
-            'total_items' => 'required|integer|min:1',
-            'purchase_date' => 'required|date',
-            'notes' => 'nullable|string',
+            'purchase_date'  => 'required|date',
+            'notes'          => 'nullable|string',
         ]);
+
+        $validated['total_items'] = 0;
 
         $bale = Bale::create($validated);
 
         return redirect()->route('stock-in.show', $bale->id)
-            ->with('success', 'Bale recorded successfully. Now add items to the bale.');
+            ->with('success', 'Bale created. Add items to automatically update the total count.');
     }
 
     public function show($id)
@@ -59,29 +60,32 @@ class StockInController extends Controller
         $validated = $request->validate([
             'items' => 'required|array|min:1',
             'items.*.category_id' => 'required|exists:categories,id',
-            'items.*.status_id' => 'required|exists:statuses,id',
-            'items.*.item_code' => 'required|string|unique:items,item_code',
             'items.*.description' => 'nullable|string',
             'items.*.price' => 'required|numeric|min:0',
-            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.quantity' => 'required|integer|min:1', // This now determines the number of records
         ]);
 
         DB::transaction(function () use ($bale, $validated) {
             foreach ($validated['items'] as $itemData) {
-                Item::create([
-                    'bale_id' => $bale->id,
-                    'category_id' => $itemData['category_id'],
-                    'status_id' => $itemData['status_id'],
-                    'item_code' => $itemData['item_code'],
-                    'description' => $itemData['description'] ?? null,
-                    'price' => $itemData['price'],
-                    'quantity' => $itemData['quantity'],
-                ]);
+                $count = $itemData['quantity'];
+                
+                // Create a unique row for every single item
+                for ($i = 0; $i < $count; $i++) {
+                    Item::create([
+                        'bale_id' => $bale->id,
+                        'category_id' => $itemData['category_id'],
+                        'description' => $itemData['description'] ?? null,
+                        'price' => $itemData['price'],
+                        'quantity' => 1, // Every unique item always has a quantity of 1
+                        'is_sold' => 0,
+                        'status_id' => 1, // 'Available'
+                    ]);
+                }
             }
         });
 
-        return redirect()->route('stock-in.index')
-            ->with('success', 'Items added to bale successfully.');
+        return redirect()->route('stock-in.show', $id)
+            ->with('success', "Items successfully generated and added to the bale.");
     }
 
     public function edit($id)

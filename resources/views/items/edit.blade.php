@@ -47,11 +47,9 @@
                                     <select name="status_id" id="status_id"
                                         class="form-select @error('status_id') is-invalid @enderror" required>
                                         <option value="">Select Status</option>
-                                        @foreach($statuses as $status)
-                                            <option value="{{ $status->id }}" {{ old('status_id', $item->status_id) == $status->id ? 'selected' : '' }}>
-                                                {{ $status->name }}
-                                            </option>
-                                        @endforeach
+                                        <span class="badge {{ $item->is_sold ? 'bg-danger' : 'bg-success' }}">
+                                            {{ $item->is_sold ? 'Sold' : 'Available' }}
+                                        </span>
                                     </select>
                                     @error('status_id')
                                         <div class="invalid-feedback">{{ $message }}</div>

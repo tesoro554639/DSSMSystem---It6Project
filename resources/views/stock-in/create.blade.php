@@ -14,16 +14,17 @@
                             @csrf
 
                             <div class="row mb-3">
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <label for="bale_number" class="form-label fw-semibold text-secondary">Bale
                                         Number</label>
                                     <input type="text" name="bale_number" id="bale_number"
                                         class="form-control @error('bale_number') is-invalid @enderror"
                                         value="{{ old('bale_number') }}" required>
                                     @error('bale_number')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                </div>
+                                </div> --}}
+
                                 <div class="col-md-6">
                                     <label for="supplier_id" class="form-label fw-semibold text-secondary">Supplier</label>
                                     <select name="supplier_id" id="supplier_id"
@@ -39,9 +40,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div>
 
-                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="purchase_price" class="form-label fw-semibold text-secondary">Purchase Price
                                         (₱)</label>
@@ -52,19 +51,9 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="total_items" class="form-label fw-semibold text-secondary">Total
-                                        Items</label>
-                                    <input type="number" name="total_items" id="total_items"
-                                        class="form-control @error('total_items') is-invalid @enderror"
-                                        value="{{ old('total_items') }}" min="1" required>
-                                    @error('total_items')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
                             </div>
 
-                            <div class="row mb-4">
+                            <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="purchase_date" class="form-label fw-semibold text-secondary">Purchase
                                         Date</label>
@@ -75,7 +64,22 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <div class="col-md-6">
+
+                                {{-- <div class="col-md-6">
+                                    <label for="total_items" class="form-label fw-semibold text-secondary">Total
+                                        Items</label>
+                                    <input type="number" name="total_items" id="total_items"
+                                        class="form-control @error('total_items') is-invalid @enderror"
+                                        value="{{ old('total_items') }}" min="1" required>
+                                    @error('total_items')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div> --}}
+                            </div>
+
+                            <div class="row mb-4">
+
+                                <div class="col-md-12">
                                     <label for="notes" class="form-label fw-semibold text-secondary">Notes</label>
                                     <textarea name="notes" id="notes" class="form-control"
                                         rows="3">{{ old('notes') }}</textarea>
@@ -97,10 +101,9 @@
                     <div class="card-body p-4">
                         <h5 class="fw-bold text-info mb-3"><i class="bi bi-info-circle-fill me-2"></i>Instructions</h5>
                         <ul class="list-unstyled text-dark mb-0 space-y-2">
-                            <li class="mb-2"><strong>1.</strong> Enter the bale number from the supplier</li>
-                            <li class="mb-2"><strong>2.</strong> Select or add a new supplier</li>
-                            <li class="mb-2"><strong>3.</strong> Enter the purchase price and total item count</li>
-                            <li><strong>4.</strong> After saving, you can add individual items to this bale</li>
+                            <li class="mb-2"><strong>1.</strong> Select supplier</li>
+                            <li class="mb-2"><strong>2.</strong> Enter the purchase price and date</li>
+                            <li><strong>3.</strong> After saving, you can add individual items to this bale</li>
                         </ul>
                     </div>
                 </div>

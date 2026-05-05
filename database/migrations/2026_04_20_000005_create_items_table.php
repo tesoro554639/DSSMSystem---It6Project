@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('bale_id')->constrained('bales')->onDelete('cascade');
             $table->foreignId('category_id')->constrained('categories')->onDelete('restrict');
-            $table->foreignId('status_id')->constrained('statuses')->onDelete('restrict');
+            // $table->foreignId('status_id')->constrained('statuses')->onDelete('restrict');
             $table->string('item_code')->unique();
             $table->string('description')->nullable();
             $table->decimal('price', 12, 2);

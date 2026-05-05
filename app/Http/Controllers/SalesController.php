@@ -25,7 +25,6 @@ class SalesController extends Controller
             ->get()
             ->groupBy('category.name');
         
-        // Added payment methods for the selection in your view
         $paymentMethods = DB::table('payment_methods')->get();
         
         return view('sales.create', compact('items', 'paymentMethods'));
@@ -37,51 +36,48 @@ class SalesController extends Controller
             'items' => 'required|array|min:1',
             'items.*.item_id' => 'required|exists:items,id',
             'items.*.quantity' => 'required|integer|min:1',
-            'method_id' => 'required|exists:payment_methods,id', // Fixed validation to match migration
+            'method_id' => 'required|exists:payment_methods,id', 
             'notes' => 'nullable|string',
         ]);
 
         try {
             $transaction = DB::transaction(function () use ($validated) {
-                $subtotal = 0;
+                $totalTransactionAmount = 0;
                 $transactionItems = [];
 
                 foreach ($validated['items'] as $itemData) {
                     $item = Item::lockForUpdate()->findOrFail($itemData['item_id']);
                     
-                    // Safety check to ensure item wasn't sold while user was at checkout
                     if ($item->is_sold) {
                         throw new \Exception("Item {$item->item_code} is already sold.");
                     }
 
-                    $quantity = $itemData['quantity'];
-                    $unitPrice = $item->price;
-                    $itemSubtotal = $unitPrice * $quantity;
+                    // PHP calculation is only needed for the main Transaction total
+                    $itemSubtotal = $item->price * $itemData['quantity'];
+                    $totalTransactionAmount += $itemSubtotal;
 
-                    $subtotal += $itemSubtotal;
-
-                    // Prepare data for the attach() method
                     $transactionItems[$item->id] = [
-                        'quantity' => $quantity,
-                        'unit_price' => $unitPrice,
-                        'subtotal' => $itemSubtotal,
+                        'quantity' => $itemData['quantity'],
+                        'unit_price' => $item->price,
+
+                        
+                        'subtotal' => 0,  // the calc_subtotal trigger will overwrite this
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
 
-                    $item->update(['is_sold' => true]);
+                    // $item->update(['is_sold' => true]); -> trigger handles this
                 }
 
                 $transaction = Transaction::create([
                     'user_id' => auth()->id(),
                     'transaction_number' => Transaction::generateTransactionNumber(),
-                    'subtotal' => $subtotal,
-                    'total_amount' => $subtotal,
-                    'method_id' => $validated['method_id'], // Fixed field name
+                    'subtotal' => $totalTransactionAmount,
+                    'total_amount' => $totalTransactionAmount,
+                    'method_id' => $validated['method_id'],
                     'notes' => $validated['notes'] ?? null,
                 ]);
 
-                // Efficiently attach all items at once
                 $transaction->items()->attach($transactionItems);
 
                 return $transaction;
@@ -97,7 +93,6 @@ class SalesController extends Controller
 
     public function show($id)
     {
-        // Added load for payment method to show on the receipt
         $transaction = Transaction::with(['user', 'items.category', 'items.status', 'paymentMethod'])
             ->findOrFail($id); 
 
