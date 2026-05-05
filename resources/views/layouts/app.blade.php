@@ -103,13 +103,7 @@
                         <i class="bi bi-cart me-2"></i> Transactions
                     </a>
                 </li>
-                <!-- NEW PAYMENT METHODS TAB -->
-                <li class="nav-item">
-                    <a class="nav-link text-white {{ request()->routeIs('payment_methods.*') ? 'bg-primary rounded' : '' }}"
-                        href="{{ route('payment_methods.index') }}">
-                        <i class="bi bi-wallet2 me-2"></i> Payment Methods
-                    </a>
-                </li>
+
 
                 <!-- Analytics Group -->
                 <li class="nav-item mt-3 mb-1 px-3">
@@ -122,6 +116,27 @@
                         <i class="bi bi-graph-up me-2"></i> Sales Reports
                     </a>
                 </li>
+
+                <!-- Operations -->
+                <li class="nav-item mt-3 mb-1 px-3">
+                    <span class="text-uppercase text-white-50 small fw-bold tracking-wide"
+                        style="font-size: 0.75rem;">Operations</span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ request()->routeIs('categories.*') ? 'bg-primary rounded' : '' }}"
+                        href="{{ route('categories.index') }}">
+                        <i class="bi bi-wallet2 me-2"></i> Categories
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ request()->routeIs('payment_methods.*') ? 'bg-primary rounded' : '' }}"
+                        href="{{ route('payment_methods.index') }}">
+                        <i class="bi bi-wallet2 me-2"></i> Payment Methods
+                    </a>
+                </li>
+
+
             </ul>
 
             <div class="mt-auto pt-3 border-top border-secondary">
