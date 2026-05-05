@@ -8,8 +8,6 @@ use App\Http\Controllers\StockInController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\PaymentMethodController;
-
-
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -37,6 +35,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('reports/daily-sales', [ReportsController::class, 'dailySales'])->name('reports.daily-sales');
     Route::get('reports/inventory-status', [ReportsController::class, 'inventoryStatus'])->name('reports.inventory-status');
+    
+    Route::get('reports/revenue-analytics', [ReportsController::class, 'revenueAnalytics'])->name('reports.revenue');
 
     Route::post('/logout', function () {
         auth()->logout();
