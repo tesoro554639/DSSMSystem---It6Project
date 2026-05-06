@@ -39,7 +39,7 @@
                             </tr>
                             <tr>
                                 <td class="text-muted ps-0 py-2">Total Items</td>
-                                <td class="text-end pe-0 py-2">{{ $bale->items->count() }}</td>
+                                <td class="text-end pe-0 py-2">{{ $bale->total_items }}</td>
                             </tr>
                             @if($bale->notes)
                                 <tr>

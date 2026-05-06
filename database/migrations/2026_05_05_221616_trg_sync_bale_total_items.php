@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::unprepared('DROP TRIGGER IF EXISTS after_item_insert_sync_bale');
 
+        // TRIGGER : update bale's total_item when adding items
+        DB::unprepared('DROP TRIGGER IF EXISTS after_item_insert_sync_bale');
         DB::unprepared("
             CREATE TRIGGER after_item_insert_sync_bale
             AFTER INSERT ON items
@@ -24,6 +25,8 @@ return new class extends Migration
                 WHERE id = NEW.bale_id;
             END
         ");
+        
+        // TODO:  TRIGGER : update bale's total_item when removing items
     }
 
     /**

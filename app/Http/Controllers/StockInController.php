@@ -46,11 +46,9 @@ class StockInController extends Controller
     {
         $bale = Bale::findOrFail($id);
 
-        // Removed 'status' from eager loading
         $bale->load(['supplier', 'items.category']);
         $categories = Category::all();
         
-        // Removed Status::all() as the model and table are gone
         return view('stock-in.show', compact('bale', 'categories'));
     }
 
@@ -70,7 +68,7 @@ class StockInController extends Controller
             foreach ($validated['items'] as $itemData) {
                 $count = $itemData['quantity'];
                 
-                // One Row = One Item: Loop creates individual unique records
+                // One Row = One Item
                 for ($i = 0; $i < $count; $i++) {
                     Item::create([
                         'bale_id' => $bale->id,
