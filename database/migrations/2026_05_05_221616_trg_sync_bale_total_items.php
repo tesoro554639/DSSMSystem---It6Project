@@ -21,12 +21,24 @@ return new class extends Migration
             BEGIN
                 -- increment the total_items in the bales table
                 UPDATE bales 
-                SET total_items = (SELECT SUM(quantity) FROM items WHERE bale_id = NEW.bale_id)
+                SET total_items = (SELECT COALESCE(SUM(quantity), 0) FROM items WHERE bale_id = NEW.bale_id)
                 WHERE id = NEW.bale_id;
             END
         ");
         
-        // TODO:  TRIGGER : update bale's total_item when removing items
+        // TODO: TRIGGER : update bale's total_item when removing items
+        DB::unprepared('DROP TRIGGER IF EXISTS after_item_remove_sync_bale');
+        DB::unprepared("
+            CREATE TRIGGER after_item_remove_sync_bale
+            AFTER DELETE ON items
+            FOR EACH ROW
+            BEGIN
+                -- decrement bale total items
+                UPDATE bales
+                SET total_items = (SELECT COALESCE(SUM(quantity), 0) FROM items WHERE bale_id = OLD.bale_id)
+                WHERE id = OLD.bale_id;
+            END
+        ");
     }
 
     /**
@@ -34,6 +46,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        DB::unprepared('DROP TRIGGER IF EXISTS after_item_insert_sync_bale');
+        DB::unprepared('DROP TRIGGER IF EXISTS after_item_remove_sync_bale');
     }
 };

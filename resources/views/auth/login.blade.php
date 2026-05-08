@@ -114,10 +114,9 @@
                         </form>
 
                         <div
-                            class="alert alert-primary bg-primary bg-opacity-10 border-start border-primary border-4 text-primary rounded-3 mb-0 d-flex align-items-start shadow-sm">
-                            <i class="bi bi-info-circle-fill me-2 mt-1"></i>
-                            <small>
-                                Select any employee from the dropdown.<br>
+                            class="alert alert-primary bg-primary bg-opacity-10 border-start border-primary border-4 text-primary rounded-3 mb-0 d-flex align-items-start">
+                            <!-- <i class="bi bi-info-circle-fill me-2 mt-1"></i> -->
+                            <small">
                                 Default password is <code>password123</code>
                             </small>
                         </div>
