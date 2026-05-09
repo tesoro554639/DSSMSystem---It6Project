@@ -40,7 +40,7 @@ Redesign delete confirmation pop-up
 
 # CHECKLIST
 Transaction triggers - DONE
-Supplier triggers
+Supplier triggers - DONE
 Daily Summary View
 Current Active Inventory View
 Daily Transaction Receipt View
