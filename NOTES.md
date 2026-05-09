@@ -35,3 +35,14 @@ Implement the Triggers and Views in the backend
 Bale = include desc, and other attributes  
 Separate Items into a new Interface
 Redesign delete confirmation pop-up
+
+---
+
+# CHECKLIST
+Transaction triggers - DONE
+Supplier triggers
+Daily Summary View
+Current Active Inventory View
+Daily Transaction Receipt View
+
+
